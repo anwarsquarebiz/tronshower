@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Custome Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <title>TRON SHOWER</title>
+</head>
+<body onload="checkTronLink()">
+  <div class="main-container">
+    <h1 class="title">TRON SHOWER</h1>
+    <div id="walletConnected" style="display: none;">
+      <p class="text" id="address"></p>
+      <button id="transferBtn">Transfer 100 TRX</button>
+      <p class="text" id="transactionHash"></p>
+    </div>
+    <div id="walletNotConnected">
+      <button id="connectBtn">Connect TronLink Wallet</button>
+    </div>
+  </div>
+
+  <div class="video-background">
+    <video autoplay muted loop id="video">
+      <source src="video.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tronweb/dist/TronWeb.js"></script>
+  <script>
+    const connectBtn = document.getElementById('connectBtn');
+    const transferBtn = document.getElementById('transferBtn');
+    const addressText = document.getElementById('address');
+    const transactionHashText = document.getElementById('transactionHash');
+    let tronWeb;
+    let address;
+
+    // Check if TronLink is already connected
+    const checkTronLink = async () => {
+      if (window.tronWeb && window.tronWeb.ready) {
+        tronWeb = window.tronWeb;
+        address = tronWeb.defaultAddress.base58;
+        addressText.textContent = `Connected Address: ${address}`;
+        document.getElementById('walletConnected').style.display = 'flex';
+        document.getElementById('walletNotConnected').style.display = 'none';
+      }
+    };
+
+    // Connect to TronLink wallet
+    const connectToWallet = async () => {
+      if (window.tronWeb && window.tronWeb.ready) {
+        tronWeb = window.tronWeb;
+        address = tronWeb.defaultAddress.base58;
+        addressText.textContent = `Connected Address: ${address}`;
+        document.getElementById('walletConnected').style.display = 'flex';
+        document.getElementById('walletNotConnected').style.display = 'none';
+      } else {
+        console.log('TronLink not found or not ready. Please install TronLink extension or try again later.');
+        alert('TronLink not found or not ready. Please install TronLink extension or try again later.');
+      }
+    };
+
+    // Transfer 100 TRX to a specific address
+    const transferTrx = async () => {
+      if (!tronWeb) {
+        console.log('Not connected to TronLink wallet.');
+        alert('Not connected to TronLink wallet.');
+        return;
+      }
+
+      const toAddress = 'TA7itUiiiiMPQhAkAoVNu18poCBr9eaGwu';
+      const amount = 100 * 1e6; // 100 TRX in Sun
+
+      try {
+        const balance = await tronWeb.trx.getBalance(address);
+        if (balance >= amount) {
+          const transaction = await tronWeb.trx.sendTransaction(toAddress, amount);
+          transactionHashText.textContent = `Transaction Hash: ${transaction.txid}`;
+          console.log('Transaction submitted:', transaction.txid);
+
+          // Save transaction hash to the database
+          // Add your database integration code here
+        } else {
+          console.log('Insufficient balance in TronLink wallet.');
+          alert('Insufficient balance in TronLink wallet.');
+        }
+      } catch (error) {
+        console.log('Error occurred while transferring TRX:', error);
+        alert('Error occurred while transferring TRX. Please check the console for more details.');
+      }
+    };
+
+    
+    checkTronLink(); // Check TronLink on page load
+    
+    connectBtn.addEventListener('click', connectToWallet);
+    transferBtn.addEventListener('click', transferTrx);
+  </script>
+</body>
+</html>
