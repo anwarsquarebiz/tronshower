@@ -19,7 +19,10 @@
     <!-- <div class="title">TRON SHOWER</div> -->
     <img src="LoGo.svg" class="titlelogo img-fluid"></img>
     <div id="walletConnected" style="display: none;">
-      <p class="text" id="address"></p>
+      <div class="text">Connected Address:</div>
+      <p class="text" id="address">
+
+      </p>
       <button id="transferBtn">Transfer 100 TRX</button>
       <p class="text" id="transactionHash"></p>
     </div>
@@ -48,7 +51,7 @@
       if (window.tronWeb && window.tronWeb.ready) {
         tronWeb = window.tronWeb;
         address = tronWeb.defaultAddress.base58;
-        addressText.textContent = `Connected Address: ${address}`;
+        addressText.textContent = address;
         document.getElementById('walletConnected').style.display = 'flex';
         document.getElementById('walletNotConnected').style.display = 'none';
       }
