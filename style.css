@@ -87,8 +87,13 @@ h1 {
 }
 
 .titlelogo {
-    max-width: 500px;
+    width: 500px;
 }
+@media only screen and (max-width: 600px) {
+    .titlelogo {
+        width: 100px;
+    }
+  }
 
 .text {
     font-size: 25px;
